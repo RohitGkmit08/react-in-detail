@@ -1,0 +1,168 @@
+React.memo() -
+By default, when a parent component updates its state, all of its child components will automatically re-render, 
+even if those children didn't receive any new data. 
+Wrapping a child component in React.memo() stops this unnecessary work by forcing React to cache (memoize) the last rendered result and reuse it.
+
+Without React.memo() - 
+Parent renders
+      ↓
+Child renders 
+every single time
+
+With React.memo() - 
+Parent renders
+      ↓
+Compare props
+      │
+      ├───────────────┐
+      │               │
+Props changed?     No changes
+      │               │
+     Yes              │
+      │               ▼
+Render Child     Skip Child
+
+| Prop Type | Compared By | Stable Across Renders?                    |
+| --------- | ----------- | ----------------------------------------- |
+| Number    | Value       | ✅ Yes (`25 === 25`)                       |
+| String    | Value       | ✅ Yes (`"Hi" === "Hi"`)                   |
+| Boolean   | Value       | ✅ Yes                                     |
+| Object    | Reference   | ❌ No (unless memoized)                    |
+| Array     | Reference   | ❌ No (unless memoized)                    |
+| Function  | Reference   | ❌ No (unless memoized with `useCallback`) |
+
+
+Suppose we have 
+App
+│
+└── Child
+App has a counter - 
+function App() {
+    const [count, setCount] = useState(0);
+    return (
+        <>
+            <button onClick={() => setCount(count + 1)}>
+                Increment
+            </button>
+
+            <Child />
+        </>
+    );
+}
+
+User clicks increment, count change -> App re-render -> App() executes again. Now react reaches <Child/>
+Should Child render again ? Logically no, but by default App render -> child render
+
+
+FIRST SOLUTION -> React.memo()
+const Child = React.memo(function Child() {
+    return <h1>Child</h1>;
+});
+Instead of immediately rendering the child, React asks : "Did Child's props change?" if "No", then skip rendering
+
+EXAMPLE 1 -> <Child age={25} />
+first render -> {age: 25}
+second render -> {age: 25}
+react compares (25 === 25), so therefore skip rendering of child 
+
+EXAMPLE 2 -> lets say we pass an object as prop.
+const user = {
+    name: "Rohit"
+};
+<Child user={user} />
+
+first render -> JS creates "Object A"
+Second render -> JS cerates "Object B"
+React compares -> (ObjectA === ObjectB), false. Since objects are compared by Reference.
+Therefore child renders 
+
+SECOND SOLUTION - useMemo()
+We need react to remember the object 
+
+const user = useMemo(() => {
+    return {
+        name: "Rohit"
+    };
+}, []);
+
+first render -> Object A
+second render -> Dependencies unchanged, reuse Object A
+react compares (ObjectA === ObjectA), true. Therefore skip the child rendering.
+
+EXAMPLE 3 - we pass a function 
+function handleClick() {
+    console.log("Clicked");
+}
+
+<Child onClick={handleClick} />
+-> this will cause re-render in child again and again. Because function Reference changed.
+THIRD SOLUTION -> useCallback()
+const handleClick = useCallback(() => {
+    console.log("Clicked");
+}, []);
+
+first render -> Function A, dependencies unchanged
+second render -> dependencies unchanged, reuse Function A.
+react compares -> Function A === Function A, skip child re-render.
+
+
+
+REACT.MEMO() - Prevent unnecessary child component re-renders. Does this by comparing Props
+
+USEMEMO() - Prevent unnecessary recreation of expensive values (objects, arrays, calculations).
+
+USECALLBACK() - Prevent unnecessary recreation of functions.
+
+
+RELATIONSHIP BETWEEN react.memo(), useMemo(), useCallback()-
+<App>
+
+    <Child
+        age={25}
+        user={user}
+        onClick={handleClick}
+    />
+
+</App>
+
+1. React.memo checks: Did age change? Did user change? Did onClick change?
+a. age - age={25}, comparison 25 === 25 -> no problem
+b. user - 
+without React.memo()-
+const user = {
+    name: "Rohit"
+};
+Object A === Object B -> false, child render.
+
+with React.memo() - 
+const user = useMemo(() => {
+    return {
+        name: "Rohit"
+    };
+}, []);
+Object A === Object A, same
+
+c. handleClick 
+without useCallback() - function handleClick(){}
+Function === Function B, different -> child render.
+
+with useCallback() -
+const handleClick = useCallback(() => {
+
+}, []);
+->FunctionA === FunctionA, same
+
+
+
+React.memo decides whether to render a child. useMemo and useCallback help by keeping the child's props stable.
+Without stable props -
+React.memo
+        │
+        ▼
+Cannot help.
+
+With stable props:
+React.memo
+        │
+        ▼
+Can skip rendering.

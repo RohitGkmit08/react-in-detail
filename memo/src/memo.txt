@@ -1,0 +1,82 @@
+Conclusion -
+
+Syntax 
+const memoizedValue = useMemo(() => {
+
+    return expensiveCalculation();
+
+}, [dependencies]);
+
+There are 2 arguments 
+
+1. Callback function -> this is the calculation that you want react to remember.
+React runs this function only when needed. It stores the returned value, not the function itself.
+
+() => {
+
+    return expensiveCalculation();
+
+}
+
+const total = useMemo(() => {
+
+    let sum = 0;
+
+    for(let i=0;i<1000000000;i++){
+        sum += i;
+    }
+
+    return sum;
+
+}, []);
+react stores 499999999500000000, not the function.
+
+2. Dependency array -> it answers one question - "When should React throw away the old value and calculate a new one?"
+
+case-1: empty dependency array 
+useMemo(() => {
+
+    return expensiveCalculation();
+
+}, []);
+->meaning, this calcuation depends on nothing.
+
+case-2: one dependency
+const filteredProducts = useMemo(() => {
+
+    return products.filter(product =>
+        product.name.includes(search)
+    );
+
+}, [search]);
+->when should react calculate again ? only when search changes. 
+
+case-3: multiple dependencies
+const filteredProducts = useMemo(() => {
+
+    return products.filter(product =>
+        product.name.includes(search)
+    );
+
+}, [products, search]);
+-> when will react re-calcuate ? if either product changes or search changes
+
+
+Final model
+Component renders
+        │
+        ▼
+React reaches useMemo
+        │
+        ▼
+Compare current dependencies
+with previous dependencies
+        │
+        ├───────────────┐
+        │               │
+Same                  Different
+        │               │
+        ▼               ▼
+Reuse cached      Run callback
+value             Compute new value
+                  Store new value

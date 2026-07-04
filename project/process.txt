@@ -1,0 +1,47 @@
+1. Header -> only displays Employee Dashboard, nothing else.
+
+2. SearchBar -> Only responsible for "Search Input", It doesn't know anything about employees.
+
+3. EmployeeForm -> responsible for "Name", "Email", "Department", "Add employee button".
+
+4. EmployeeList -> responsible for, Loop through employees -> Render EmployeeCard. It does not know how to render one employee card. It just knows "I have a list".
+
+5. EmployeeCard -> Displays Name, Email, Department, Delete Button. One employee. 
+
+6. Statistics -> Displays "Developer:5", "HR:5", "Testing:6", nothing else.
+
+Where should state live ? 
+1. Employee List -> this is required by "EmployeeList", "Statistics", maybe "Searchbar" too. Closest common parent "App".
+const [employees, setEmployees] lives in App.jsx
+
+2. Search text -> who needs it? "SearchBar" and "EmployeeList". Common parent -> App.jsx
+const [searchText, setSearchText] lives in App.jsx
+
+3. Form data -> who needs "name","email","department" while typing ? "EmployeeForm". No other component
+const [formData, setFormData] lives in "EmployeeForm"
+
+What props will flow ? 
+1. SearchBar -> needs "searchText" "setSearchText" because it displays the current value and updates it.
+2. EmployeeForm -> needs "employee" "setEmployees" because when we click "Add Employee", a new employee must be added.
+3. EmployeeList -> needs "employee" because it displays them.
+4. Statistics -> needs "employee" because it counts them.
+
+Props are NOT DECIDED by what a component displays, props are decided by what data a component needs from its parent.
+
+Which props the componets will recieve ? 
+1. SearchBar -> "searchText", "setSearchText"
+2. EmployeeForm -> "employees", "setEmployees". Its own formData stays inside "EmployeeForm", but the employee lives in App.jsx
+3. EmployeeList -> "employees",  a list of employees 
+4. Statistics -> "employees" Statistics will loop through the array and compute the counts
+
+Final props 
+
+| Component      | Props                                      | Why?                              |
+| -------------- | ------------------------------------------ | --------------------------------- |
+| `Header`       | None                                       | Static heading                    |
+| `SearchBar`    | `searchText`, `setSearchText`              | Display and update search         |
+| `EmployeeForm` | `employees`, `setEmployees`                | Add a new employee to App's state |
+| `EmployeeList` | `employees`                                | Display all employees             |
+| `EmployeeCard` | `employee` *(later also `deleteEmployee`)* | Display one employee              |
+| `Statistics`   | `employees`                                | Calculate counts                  |
+
