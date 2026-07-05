@@ -1,9 +1,8 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import Header from "./components/Header"
 import SearchBar from "./components/SearchBar"
 import EmployeeForm from "./components/EmployeeForm"
 import EmployeeList from "./components/EmployeeList"
-import EmployeeCard from "./components/EmployeeCard"
 import Statistics from "./components/Statistics"
 
 function App() {
@@ -30,6 +29,12 @@ function App() {
 
   const [searchText, setSearchText] = useState("");
 
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((employee) => {
+      employee.name.toLowerCase().includes(searchText.toLowerCase())
+    })
+  }, [searchText, employees])
+  
   return (
     <>
       <Header/>
@@ -38,9 +43,7 @@ function App() {
 
       <EmployeeForm setEmployees={setEmployees}/>
 
-      <EmployeeList employees={employees}/>
-
-      <EmployeeCard />
+      <EmployeeList employees={filteredEmployees}/>
       
       <Statistics employees={employees}/>
     </>

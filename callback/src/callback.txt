@@ -24,12 +24,12 @@ Render Child     Skip Child
 
 | Prop Type | Compared By | Stable Across Renders?                    |
 | --------- | ----------- | ----------------------------------------- |
-| Number    | Value       | ✅ Yes (`25 === 25`)                       |
-| String    | Value       | ✅ Yes (`"Hi" === "Hi"`)                   |
-| Boolean   | Value       | ✅ Yes                                     |
-| Object    | Reference   | ❌ No (unless memoized)                    |
-| Array     | Reference   | ❌ No (unless memoized)                    |
-| Function  | Reference   | ❌ No (unless memoized with `useCallback`) |
+| Number    | Value       | Yes (`25 === 25`)                       |
+| String    | Value       | Yes (`"Hi" === "Hi"`)                   |
+| Boolean   | Value       | Yes                                     |
+| Object    | Reference   | No (unless memoized)                    |
+| Array     | Reference   | No (unless memoized)                    |
+| Function  | Reference   | No (unless memoized with `useCallback`) |
 
 
 Suppose we have 

@@ -1,7 +1,7 @@
 
 const Header = () => {
   return (
-    <div>Enployee Dashboard</div>
+    <div className="dashboard-title">Enployee Dashboard</div>
   )
 }
 

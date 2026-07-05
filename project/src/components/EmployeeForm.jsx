@@ -47,11 +47,12 @@ const EmployeeForm = ({setEmployees }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Employee Registration Form</h2>
+        <form className="form-container" onSubmit={handleSubmit}>
+            <h2 className="section-title">Employee Registration Form</h2>
 
             <input
                 ref={inputRef}
+                className="form-input"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -59,19 +60,12 @@ const EmployeeForm = ({setEmployees }) => {
                 onChange={handleChange}
             />
 
-            {
-                formData.name.length > 0 && formData.name.length < 3 &&
-                (
-                    <p style={{ color: "red" }}>
-                        Name must be at least 3 characters.
-                    </p>
-                )
-            }
-
-            <br />
-            <br />
+            <p className="error-text" style={{ color: "red", visibility: formData.name.length > 0 && formData.name.length < 3 ? "visible" : "hidden" }}>
+                Name must be at least 3 characters.
+            </p>
 
             <input
+                className="form-input"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -79,19 +73,12 @@ const EmployeeForm = ({setEmployees }) => {
                 onChange={handleChange}
             />
 
-            {
-                formData.email.length > 0 && !formData.email.includes("@") &&
-                (
-                    <p style={{ color: "red" }}>
-                        Email must contain @
-                    </p>
-                )
-            }
-
-            <br />
-            <br />
+            <p className="error-text" style={{ color: "red", visibility: formData.email.length > 0 && !formData.email.includes("@") ? "visible" : "hidden" }}>
+                Email must contain @
+            </p>
 
             <select
+                className="form-input"
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
@@ -102,19 +89,11 @@ const EmployeeForm = ({setEmployees }) => {
                 <option value="Testing">Testing</option>
             </select>
 
-            {
-                formData.department === "" &&
-                (
-                    <p style={{ color: "red" }}>
-                        Please select a department.
-                    </p>
-                )
-            }
+            <p className="error-text" style={{ color: "red", visibility: formData.department === "" ? "visible" : "hidden" }}>
+                Please select a department.
+            </p>
 
-            <br />
-            <br />
-
-            <button type="submit">
+            <button className="btn-submit" type="submit">
                 Add Employee
             </button>
         </form>
