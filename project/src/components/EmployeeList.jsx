@@ -1,6 +1,6 @@
 import EmployeeCard from "./EmployeeCard"
 const EmployeeList = ({employees}) => {
-  
+  console.log("employee list");
   return (
     <div>
       {

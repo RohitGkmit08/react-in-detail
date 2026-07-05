@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const EmployeeForm = ({setEmployees }) => {
+    console.log("employee form Rendered");
     const inputRef = useRef(null);
 
     const [formData, setFormData] = useState({

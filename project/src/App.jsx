@@ -6,6 +6,7 @@ import EmployeeList from "./components/EmployeeList"
 import Statistics from "./components/Statistics"
 
 function App() {
+  console.log("App Rendered");
   const [employees, setEmployees] = useState([
     {
       id: 1,
@@ -23,7 +24,7 @@ function App() {
       id: 3,
       name: "Priya",
       email: "pirya@gmail.com",
-      department : "Ttesting"
+      department: "Testing"
     }
   ])
 
@@ -31,7 +32,7 @@ function App() {
 
   const filteredEmployees = useMemo(() => {
     return employees.filter((employee) => {
-      employee.name.toLowerCase().includes(searchText.toLowerCase())
+      return employee.name.toLowerCase().includes(searchText.toLowerCase())
     })
   }, [searchText, employees])
   

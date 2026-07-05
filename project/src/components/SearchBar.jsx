@@ -1,6 +1,6 @@
 
 const SearchBar = ({searchText, setSearchText}) => {
-
+  console.log("search bar rendered");
   return (
     <div>
         <input 
