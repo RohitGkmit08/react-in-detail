@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useCallback } from "react"
 import Header from "./components/Header"
 import SearchBar from "./components/SearchBar"
 import EmployeeForm from "./components/EmployeeForm"
@@ -36,6 +36,10 @@ function App() {
     })
   }, [searchText, employees])
   
+  const deleteEmployee = useCallback((id) => {
+    setEmployees((prev) => prev.filter(employee => employee.id !== id))
+  }, [])
+  
   return (
     <>
       <Header/>
@@ -44,7 +48,7 @@ function App() {
 
       <EmployeeForm setEmployees={setEmployees}/>
 
-      <EmployeeList employees={filteredEmployees}/>
+      <EmployeeList employees={filteredEmployees} deleteEmployeeById={deleteEmployee}/>
       
       <Statistics employees={employees}/>
     </>

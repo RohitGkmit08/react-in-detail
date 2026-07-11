@@ -1,5 +1,5 @@
 import EmployeeCard from "./EmployeeCard"
-const EmployeeList = ({employees}) => {
+const EmployeeList = ({employees, deleteEmployeeById}) => {
   console.log("employee list");
   return (
     <div>
@@ -12,6 +12,7 @@ const EmployeeList = ({employees}) => {
               <EmployeeCard 
                 key={employee.id}
                 employee={employee}
+                onDelete = {deleteEmployeeById}
               />
             ))
           }
